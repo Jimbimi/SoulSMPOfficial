@@ -1,0 +1,6 @@
+name: SoulSMP
+version: '1.0'
+main: net.kevarion.soulSMP.SoulSMP
+api-version: '1.21'
+authors: [ Kevarion ]
+description: The Discord SMP mod/plugin thing
