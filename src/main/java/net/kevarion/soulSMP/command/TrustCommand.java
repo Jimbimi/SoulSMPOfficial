@@ -2,6 +2,7 @@ package net.kevarion.soulSMP.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import com.viaversion.viaversion.util.ChatColorUtil;

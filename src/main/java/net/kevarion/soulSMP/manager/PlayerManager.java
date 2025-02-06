@@ -55,6 +55,16 @@ public class PlayerManager implements Listener {
         }).findFirst().orElse(null);
     }
 
+    public void registerPlayers() {
+        FileConfiguration playerData = dataManager.getPlayerDataConfig();
+        for (String keys : playerData.getKeys(false)) {
+            if (isValidUUID(keys)) {
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(keys));
+                createSoulPlayer(playerData, offlinePlayer);
+            }
+        }
+    }
+
     public void registerPlayer(Player player) {
         FileConfiguration playerData = dataManager.getPlayerDataConfig();
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player.getUniqueId());

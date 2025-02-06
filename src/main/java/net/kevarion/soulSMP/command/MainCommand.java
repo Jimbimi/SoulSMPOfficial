@@ -1,16 +1,16 @@
 package net.kevarion.soulSMP.command;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import net.kevarion.soulSMP.SoulSMP;
+import net.kevarion.soulSMP.manager.CooldownManager;
 import net.kevarion.soulSMP.manager.SoulManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.Objects;
 
 @CommandAlias("soulsmp|ssmp")
 @CommandPermission("soulsmp.*")
@@ -23,7 +23,7 @@ public class MainCommand extends BaseCommand {
         player.sendMessage(Component.text("Please provide arguments!").color(NamedTextColor.RED));
     }
 
-    @Subcommand("givesoulfragment")
+    @Subcommand("givesoul")
     public void soulFragmentGive(Player player, String[] args) {
         if (args.length < 2) {
             player.sendMessage(Component.text("Usage: /soulsmp givesoulfragment [player] [amount]"));
@@ -38,15 +38,15 @@ public class MainCommand extends BaseCommand {
             return;
         }
 
-        soulManager.setSoulFragment(target, amount);
+        soulManager.addSoulFragments(target, amount);
         if (amount >= 2) {
-            player.sendMessage(Component.text("You gave " + target.getName() + amount + " soul fragments!").color(NamedTextColor.GREEN));
+            player.sendMessage(Component.text("You gave " + target.getName() + " " + amount + " soul fragments!").color(NamedTextColor.GREEN));
         } else if (amount == 1) {
-            player.sendMessage(Component.text("You gave " + target.getName() + amount + " soul fragment!").color(NamedTextColor.GREEN));
+            player.sendMessage(Component.text("You gave " + target.getName() + " " + amount + " soul fragment!").color(NamedTextColor.GREEN));
         }
     }
 
-    @Subcommand("removesoulfragment")
+    @Subcommand("removesoul")
     public void soulFragmentRemove(Player player, String[] args) {
         if (args.length < 2) {
             player.sendMessage(Component.text("Usage: /soulsmp removesoulfragment [player] [amount]"));
@@ -61,11 +61,27 @@ public class MainCommand extends BaseCommand {
             return;
         }
 
-        soulManager.setSoulFragment(target, amount);
+        soulManager.removeSoulFragment(target, amount);
         if (amount >= 2) {
             player.sendMessage(Component.text("You have removed " + amount + " soul fragments from " + target.getPlayer()).color(NamedTextColor.GREEN));
         } else if (amount == 1) {
             player.sendMessage(Component.text("You have removed " + amount + " soul fragment from " + target.getPlayer()).color(NamedTextColor.GREEN));
+        }
+    }
+
+    @Subcommand("resetcooldowns")
+    @CommandCompletion("all")
+    public void reset(Player player, String[] args) {
+        CooldownManager cooldownManager = SoulSMP.getCooldownManager();
+
+        if (args.length == 0) {
+            cooldownManager.resetPlayerCooldown(player);
+        }
+
+        if (args[0].equalsIgnoreCase("all")) {
+            for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                cooldownManager.resetPlayerCooldown(allPlayers);
+            }
         }
     }
 

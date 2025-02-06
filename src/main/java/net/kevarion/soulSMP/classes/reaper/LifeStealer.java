@@ -6,6 +6,7 @@ import net.kevarion.soulSMP.manager.component.Ability;
 import net.kevarion.soulSMP.manager.component.SoulPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -24,7 +25,12 @@ import java.util.Random;
 public class LifeStealer extends Ability {
     @Override
     public Component getName() {
-        return Component.text("Lifestealer").color(NamedTextColor.DARK_RED);
+        return Component.text("Lifestealer", NamedTextColor.DARK_RED, TextDecoration.UNDERLINED);
+    }
+
+    @Override
+    public String getIdentifier() {
+        return "first";
     }
 
     @Override
@@ -40,11 +46,9 @@ public class LifeStealer extends Ability {
     @Override
     public void activate(Player player) {
         setActive(true);
-        if (!abilityUnlocked) return;
-
         Location location = player.getLocation();
 
-        new BukkitRunnable() {
+        BukkitRunnable abilityTask = new BukkitRunnable() {
             int ticks = 0;
             final int maxTicks = 60;
             Random random = new Random();
@@ -54,6 +58,8 @@ public class LifeStealer extends Ability {
                 if (ticks >= maxTicks || !player.isOnline()) {
                     cancel();
                     setActive(false);
+
+                    player.removePotionEffect(PotionEffectType.REGENERATION);
                     return;
                 }
 
@@ -70,8 +76,13 @@ public class LifeStealer extends Ability {
                 }
 
                 SoulPlayer soulPlayer = PlayerManager.findSoulPlayer(player);
-                if (soulPlayer == null) return;
+                if (soulPlayer == null) {
+                    cancel();
+                    setActive(false);
+                    return;
+                }
 
+                // Damage and weaken nearby entities
                 for (Entity entity : player.getWorld().getNearbyEntities(currentLocation, 10, 10, 10)) {
                     if (entity instanceof LivingEntity && entity != player) {
                         LivingEntity target = (LivingEntity) entity;
@@ -86,7 +97,9 @@ public class LifeStealer extends Ability {
 
                 ticks++;
             }
-        }.runTaskTimer(SoulSMP.getInstance(), 0, 1);
+        };
+
+        abilityTask.runTaskTimer(SoulSMP.getInstance(), 0, 1);
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 0));
     }

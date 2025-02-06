@@ -35,7 +35,7 @@ public class Reaper extends SMPClass {
 
     @Override
     public List<Ability> getAbilities() {
-        return List.of(new LifeStealer());
+        return List.of(new LifeStealer(), new DeathsTouch());
     }
 
     @Override
@@ -43,8 +43,11 @@ public class Reaper extends SMPClass {
         ItemStack item = new ItemStack(Material.MAGMA_CREAM);
         ItemMeta meta = item.getItemMeta();
 
+
+/*
         String displayName = LegacyComponentSerializer.legacySection().serialize(getName());
-        meta.setDisplayName(displayName);
+*/
+        meta.displayName(getName());
         meta.setCustomModelData(getCustomModelData());
         item.setItemMeta(meta);
 

@@ -74,8 +74,6 @@ public class CooldownManager implements Listener {
     }
 
     public void showActionbar(Player player, SMPClass smpClass) {
-        Bukkit.getLogger().info("[DEBUG] showActionbar called for player: " + player.getName());
-
         BukkitTask existingTask = actionBarTasks.get(player.getUniqueId());
         if (existingTask != null) {
             existingTask.cancel();
@@ -102,7 +100,7 @@ public class CooldownManager implements Listener {
 
                     if (ability.isActive()) {
                         cooldownDisplay = "⌛";
-                    } else if (!ability.isUnlocked()) {
+                    } else if (!ability.isUnlocked(player)) {
                         cooldownDisplay = "❌";
                     } else {
                         cooldownDisplay = remainingCooldown > 0 ? remainingCooldown + "s" : "✔";
@@ -136,8 +134,6 @@ public class CooldownManager implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Bukkit.getLogger().info("[DEBUG] Global action bar checker running...");
-
                 if (classManager == null) return;
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     SMPClass smpClass = classManager.getSelectedClass(player);
