@@ -96,19 +96,19 @@ public class CooldownManager implements Listener {
                 for (int i = 0; i < smpClass.getAbilities().size(); i++) {
                     Ability ability = smpClass.getAbilities().get(i);
                     int remainingCooldown = getRemainingCooldown(player, ability);
-                    String cooldownDisplay;
+                    Component cooldownDisplay;
 
                     if (ability.isActive()) {
-                        cooldownDisplay = "⌛";
+                        cooldownDisplay = Component.text("⌛", NamedTextColor.GOLD);
                     } else if (!ability.isUnlocked(player)) {
-                        cooldownDisplay = "❌";
+                        cooldownDisplay = Component.text("❌", NamedTextColor.DARK_RED);
                     } else {
-                        cooldownDisplay = remainingCooldown > 0 ? remainingCooldown + "s" : "✔";
+                        cooldownDisplay = remainingCooldown > 0 ? Component.text(remainingCooldown + "s", NamedTextColor.WHITE) : Component.text("✔", NamedTextColor.GREEN, TextDecoration.BOLD);
                     }
 
                     actionBarMessage = actionBarMessage.append(ability.getName())
                             .append(Component.text(" [", NamedTextColor.DARK_GRAY))
-                            .append(Component.text(cooldownDisplay, NamedTextColor.WHITE))
+                            .append(cooldownDisplay)
                             .append(Component.text("]", NamedTextColor.DARK_GRAY));
 
                     if (i < smpClass.getAbilities().size() - 1) {
@@ -118,7 +118,7 @@ public class CooldownManager implements Listener {
 
                 player.sendActionBar(actionBarMessage);
             }
-        }.runTaskTimer(SoulSMP.getInstance(), 0L, 20L);
+        }.runTaskTimer(SoulSMP.getInstance(), 0L, 1L);
 
         actionBarTasks.put(player.getUniqueId(), newTask);
     }

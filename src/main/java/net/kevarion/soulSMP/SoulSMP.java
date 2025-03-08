@@ -66,7 +66,7 @@ public final class SoulSMP extends JavaPlugin {
             online.kick(Component.text("SoulSMP enabling, rejoin!", NamedTextColor.GREEN));
         }
         playerManager.registerPlayers();
-
+        
         registerCommands();
         registerEvents();
         registerRecipes();

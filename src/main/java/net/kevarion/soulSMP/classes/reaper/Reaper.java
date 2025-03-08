@@ -35,7 +35,7 @@ public class Reaper extends SMPClass {
 
     @Override
     public List<Ability> getAbilities() {
-        return List.of(new LifeStealer(), new DeathsTouch());
+        return List.of(new LifeStealer(), new DeathsTouch(), new GraveStep());
     }
 
     @Override

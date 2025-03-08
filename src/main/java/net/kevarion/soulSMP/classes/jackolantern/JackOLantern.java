@@ -4,7 +4,9 @@ import net.kevarion.soulSMP.manager.component.Ability;
 import net.kevarion.soulSMP.manager.component.SMPClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -31,11 +33,17 @@ public class JackOLantern extends SMPClass {
 
     @Override
     public List<Ability> getAbilities() {
-        return List.of();
+        return List.of(new PumpkinBomb(), new CreepingVines(), new JacksGrin());
     }
 
     @Override
     public ItemStack getItem() {
-        return null;
+        ItemStack item = new ItemStack(Material.MAGMA_CREAM);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(getName());
+        meta.setCustomModelData(getCustomModelData());
+        item.setItemMeta(meta);
+
+        return item;
     }
 }

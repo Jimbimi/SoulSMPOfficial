@@ -53,9 +53,11 @@ public class ReviveManager implements Listener {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        if (item != null && item == getGravebringer() && event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            openGravebringerMenu(player);
-            player.sendMessage(Component.text("You have opened the Gravebringer menu!", NamedTextColor.GREEN));
+        if (item == getGravebringer()) {
+            if (event.getAction().isRightClick()) {
+                openGravebringerMenu(player);
+                player.sendMessage(Component.text("You have opened the Gravebringer menu!", NamedTextColor.GREEN));
+            }
         }
     }
 
@@ -111,8 +113,8 @@ public class ReviveManager implements Listener {
             @Override
             public void run() {
                 for (Player players : Bukkit.getOnlinePlayers()) {
-                    if (players.isBanned()) return;
-                    if (soulManager.getSoulFragments(players) > 0 && soulManager.getSoulFragments(players) <= 3) return;
+                    if (players.isBanned()) continue;
+                    if (soulManager.getSoulFragments(players) >0) continue;
 
                     Bukkit.broadcast(Component.text(players.getName(), NamedTextColor.RED).append(Component.text(" has been death banned!", NamedTextColor.WHITE)));
                     players.kick(Component.text("You were banned for running out of soul fragments!", NamedTextColor.RED));

@@ -76,13 +76,8 @@ public class LifeStealer extends Ability {
                 }
 
                 SoulPlayer soulPlayer = PlayerManager.findSoulPlayer(player);
-                if (soulPlayer == null) {
-                    cancel();
-                    setActive(false);
-                    return;
-                }
+                if (soulPlayer == null) return;
 
-                // Damage and weaken nearby entities
                 for (Entity entity : player.getWorld().getNearbyEntities(currentLocation, 10, 10, 10)) {
                     if (entity instanceof LivingEntity && entity != player) {
                         LivingEntity target = (LivingEntity) entity;

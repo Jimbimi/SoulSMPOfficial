@@ -1,6 +1,7 @@
 package net.kevarion.soulSMP.manager;
 
 import net.kevarion.soulSMP.SoulSMP;
+import net.kevarion.soulSMP.classes.jackolantern.JackOLantern;
 import net.kevarion.soulSMP.classes.reaper.Reaper;
 import net.kevarion.soulSMP.classes.wisp.Wisp;
 import net.kevarion.soulSMP.manager.component.Ability;
@@ -41,6 +42,7 @@ public class ClassManager implements Listener {
     public void registerAllAvailableClasses() {
         registerClass(new Reaper());
         registerClass(new Wisp());
+        registerClass(new JackOLantern());
     }
 
     public void registerClass(SMPClass smpClass) {

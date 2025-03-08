@@ -35,7 +35,7 @@ public class Wisp extends SMPClass {
 
     @Override
     public List<Ability> getAbilities() {
-        return List.of(new WispSwarm(), new GuidingWisp());
+        return List.of(new WispSwarm());
     }
 
     @Override
