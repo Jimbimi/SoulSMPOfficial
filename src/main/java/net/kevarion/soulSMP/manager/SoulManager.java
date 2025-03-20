@@ -29,6 +29,7 @@ public class SoulManager implements Listener {
         Player player = event.getPlayer();
         if (dataManager.getPlayerDataConfig().get("players." + player.getUniqueId()) == null) {
             setSoulFragment(player, 1);
+            player.getInventory().addItem(new ClassManager(SoulSMP.getCooldownManager()).getSoulRerollerItem());
         }
     }
 

@@ -38,7 +38,7 @@ public class JackOLantern extends SMPClass {
 
     @Override
     public ItemStack getItem() {
-        ItemStack item = new ItemStack(Material.MAGMA_CREAM);
+        ItemStack item = new ItemStack(Material.SLIME_BALL);
         ItemMeta meta = item.getItemMeta();
         meta.displayName(getName());
         meta.setCustomModelData(getCustomModelData());

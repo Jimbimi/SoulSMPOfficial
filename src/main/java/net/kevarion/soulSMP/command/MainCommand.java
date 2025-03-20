@@ -3,16 +3,13 @@ package net.kevarion.soulSMP.command;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.kevarion.soulSMP.SoulSMP;
+import net.kevarion.soulSMP.manager.ClassManager;
 import net.kevarion.soulSMP.manager.CooldownManager;
 import net.kevarion.soulSMP.manager.SoulManager;
-import net.kevarion.soulSMP.manager.revive.ReviveManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.Arrays;
-import java.util.Objects;
 
 @CommandAlias("soulsmp|ssmp")
 @CommandPermission("soulsmp.*")
@@ -87,22 +84,26 @@ public class MainCommand extends BaseCommand {
         }
     }
 
+    @Subcommand("givererollertoall")
+    public void give(Player player) {
+        for (Player player1 : Bukkit.getOnlinePlayers()) {
+            player1.getInventory().addItem(new ClassManager(SoulSMP.getCooldownManager()).getSoulRerollerItem());
+        }
+    }
+
     @Subcommand("gravebringer")
     @CommandCompletion("@players @empty")
     public void giveGravebringer(Player player, String[] args) {
         Player target = Bukkit.getPlayer(args[0]);
-        ReviveManager reviveManager = SoulSMP.getReviveManager();
 
         if (target == null) {
             player.sendMessage(Component.text("Player not found!", NamedTextColor.RED));
             return;
         }
 
-        target.getInventory().addItem(reviveManager.getGravebringer());
         target.sendMessage(Component.text("You were given the Gravebringer!", NamedTextColor.GREEN));
 
         if (args.length == 0) {
-            player.getInventory().addItem(reviveManager.getGravebringer());
             player.sendMessage(Component.text("You were given the Gravebringer!", NamedTextColor.GREEN));
         }
     }

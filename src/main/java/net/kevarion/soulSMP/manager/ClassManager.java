@@ -3,6 +3,7 @@ package net.kevarion.soulSMP.manager;
 import net.kevarion.soulSMP.SoulSMP;
 import net.kevarion.soulSMP.classes.jackolantern.JackOLantern;
 import net.kevarion.soulSMP.classes.reaper.Reaper;
+import net.kevarion.soulSMP.classes.revenant.Revenant;
 import net.kevarion.soulSMP.classes.wisp.Wisp;
 import net.kevarion.soulSMP.manager.component.Ability;
 import net.kevarion.soulSMP.manager.component.SMPClass;
@@ -190,13 +191,16 @@ public class ClassManager implements Listener {
         taskId[0] = Bukkit.getScheduler().runTaskTimer(SoulSMP.getInstance(), new Runnable() {
             private int counter = 0;
             private final Random random = new Random();
-            private SMPClass selectedClass;
-            String displayName = LegacyComponentSerializer.legacySection().serialize(selectedClass.getName());
+            private SMPClass selectedClass; // Declare selectedClass here
 
             @Override
             public void run() {
                 if (counter < 10) {
-                    SMPClass randomClass = classList.get(random.nextInt(classList.size()));
+                    selectedClass = classList.get(random.nextInt(classList.size())); // Select class here
+
+                    // Display the selected class name after it's been initialized
+                    String displayName = LegacyComponentSerializer.legacySection().serialize(selectedClass.getName());
+
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.0F);
 
                     player.showTitle(Title.title(
@@ -207,13 +211,15 @@ public class ClassManager implements Listener {
                 } else {
                     Bukkit.getScheduler().cancelTask(taskId[0]);
 
-                    selectedClass = classList.get(random.nextInt(classList.size()));
+                    selectedClass = classList.get(random.nextInt(classList.size())); // Select class after the randomization finishes
                     giveClassToPlayer(player, selectedClass.getIdentifier());
+
+                    String displayName = LegacyComponentSerializer.legacySection().serialize(selectedClass.getName());
 
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
                     player.showTitle(Title.title(
-                            Component.text("ꜱᴘɪʀɪᴛ ꜱᴇʟᴇᴄᴛᴇᴅ", NamedTextColor.GREEN),
-                            Component.text(displayName)
+                            Component.text("ᴄʟᴀꜱꜱ ꜱᴇʟᴇᴄᴛᴇᴅ", NamedTextColor.GREEN),
+                            Component.text(displayName) // Display the selected class name properly
                     ));
                     player.sendMessage(Component.text("You've been assigned: " + selectedClass.getName(), NamedTextColor.GREEN));
                 }
@@ -226,20 +232,25 @@ public class ClassManager implements Listener {
         Player player = event.getPlayer();
         ItemStack mainHand = player.getInventory().getItemInMainHand();
 
-        if (mainHand != null && !mainHand.getType().isAir() && event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            long lastClickTime = player.hasMetadata("lastRerollerClick")
-                    ? player.getMetadata("lastRerollerClick").get(0).asLong()
-                    : 0;
+        if (mainHand != null) {
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                long lastClickTime = player.hasMetadata("lastRerollerClick")
+                        ? player.getMetadata("lastRerollerClick").get(0).asLong()
+                        : 0;
 
-            long currentTime = System.currentTimeMillis();
+                long currentTime = System.currentTimeMillis();
 
-            if (currentTime - lastClickTime < 250) {
-                return;
-            }
-            player.setMetadata("lastRerollerClick", new FixedMetadataValue(SoulSMP.getInstance(), currentTime));
+                if (currentTime - lastClickTime < 250) {
+                    return;
+                }
+                player.setMetadata("lastRerollerClick", new FixedMetadataValue(SoulSMP.getInstance(), currentTime));
 
-            if (mainHand == getSoulRerollerItem()) {
-                startSoulReroller(player);
+                if (mainHand.getType() == Material.WHITE_DYE) {
+                    if (mainHand.getItemMeta().displayName().equals(Component.text("Soul Reroller", NamedTextColor.GREEN, TextDecoration.UNDERLINED))) {
+                        startSoulReroller(player);
+                        player.getInventory().remove(mainHand);
+                    }
+                }
             }
         }
     }

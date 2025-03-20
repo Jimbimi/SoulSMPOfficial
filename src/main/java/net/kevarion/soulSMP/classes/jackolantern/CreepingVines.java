@@ -47,17 +47,8 @@ public class CreepingVines extends Ability {
         Location center = player.getLocation();
         World world = player.getWorld();
 
-        List<Entity> nearbyEntities = world.getNearbyEntities(center, RADIUS, RADIUS, RADIUS)
-                .stream().filter(e -> e instanceof Player && e != player)
-                .toList();
-
-        if (nearbyEntities.isEmpty()) {
-            player.sendMessage(Component.text("Not enough targets!", NamedTextColor.RED));
-            return;
-        }
-
-        for (Entity entity : nearbyEntities) {
-            if (entity instanceof Player trapped) {
+        for (Entity entity : world.getNearbyEntities(center, RADIUS, RADIUS, RADIUS)) {
+            if (entity instanceof Player trapped && entity != player) {
                 trapEntity(trapped);
             }
         }

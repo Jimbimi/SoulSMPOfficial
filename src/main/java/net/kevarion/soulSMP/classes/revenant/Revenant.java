@@ -1,4 +1,4 @@
-package net.kevarion.soulSMP.classes.wisp;
+package net.kevarion.soulSMP.classes.revenant;
 
 import net.kevarion.soulSMP.manager.component.Ability;
 import net.kevarion.soulSMP.manager.component.SMPClass;
@@ -9,38 +9,40 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class Wisp extends SMPClass {
+public class Revenant extends SMPClass {
     @Override
     public Component getName() {
-        return Component.text("Wisp", TextColor.color(0x7ed3ed));
+        return Component.text("Revenant", TextColor.color(0x5bc764));
     }
 
     @Override
     public String getIdentifier() {
-        return "wisp";
+        return "revenant";
     }
 
     @Override
     public List<Component> getLore() {
-        return List.of(Component.text("Wisp Class", NamedTextColor.GRAY));
+        return List.of(Component.text("Revenant Class", NamedTextColor.GRAY));
     }
 
     @Override
     public int getCustomModelData() {
-        return 2;
+        return 4;
     }
 
     @Override
     public List<Ability> getAbilities() {
-        return List.of(new WispSwarm(), new GuidingWisp(), new EtherealFlare());
+        return List.of();
     }
 
     @Override
     public ItemStack getItem() {
         ItemStack item = new ItemStack(Material.SLIME_BALL);
         ItemMeta meta = item.getItemMeta();
+
 
 /*
         String displayName = LegacyComponentSerializer.legacySection().serialize(getName());

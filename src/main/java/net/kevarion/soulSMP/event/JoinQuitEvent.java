@@ -3,12 +3,15 @@ package net.kevarion.soulSMP.event;
 import net.kevarion.soulSMP.SoulSMP;
 import net.kevarion.soulSMP.manager.ClassManager;
 import net.kevarion.soulSMP.manager.component.SMPClass;
+import net.kevarion.soulSMP.storage.DataManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class JoinQuitEvent implements Listener {
+
+    DataManager dataManager = SoulSMP.getDataManager();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {

@@ -2,6 +2,7 @@ package net.kevarion.soulSMP;
 
 import co.aikar.commands.PaperCommandManager;
 import lombok.Getter;
+import net.kevarion.soulSMP.classes.revenant.RevenantRage;
 import net.kevarion.soulSMP.command.AbilityCommand;
 import net.kevarion.soulSMP.command.ClassCommand;
 import net.kevarion.soulSMP.command.MainCommand;
@@ -13,9 +14,7 @@ import net.kevarion.soulSMP.manager.PlayerManager;
 import net.kevarion.soulSMP.manager.SoulManager;
 import net.kevarion.soulSMP.manager.component.SMPClass;
 import net.kevarion.soulSMP.manager.component.SoulPlayer;
-import net.kevarion.soulSMP.manager.revive.ReviveManager;
 import net.kevarion.soulSMP.storage.DataManager;
-import net.kevarion.soulSMP.util.CC;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -35,7 +34,6 @@ public final class SoulSMP extends JavaPlugin {
     @Getter private static PlayerManager playerManager;
     @Getter private static CooldownManager cooldownManager;
     @Getter private static ClassManager classManager;
-    @Getter private static ReviveManager reviveManager;
 
     private PaperCommandManager commandManager;
 
@@ -53,7 +51,6 @@ public final class SoulSMP extends JavaPlugin {
         playerManager = new PlayerManager();
         cooldownManager = new CooldownManager(this);
         classManager = new ClassManager(cooldownManager);
-        reviveManager = new ReviveManager(this);
 
         cooldownManager.setClassManager(classManager);
 
@@ -111,7 +108,8 @@ public final class SoulSMP extends JavaPlugin {
         pm.registerEvents(cooldownManager, this);
         pm.registerEvents(soulManager, this);
         pm.registerEvents(classManager, this);
-        pm.registerEvents(reviveManager, this);
+
+        pm.registerEvents(new RevenantRage(), this);
 
         pm.registerEvents(new JoinQuitEvent(), this);
     }

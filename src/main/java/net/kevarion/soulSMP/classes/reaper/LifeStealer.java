@@ -56,7 +56,7 @@ public class LifeStealer extends Ability {
             @Override
             public void run() {
                 if (ticks >= maxTicks || !player.isOnline()) {
-                    cancel();
+                    this.cancel();
                     setActive(false);
 
                     player.removePotionEffect(PotionEffectType.REGENERATION);

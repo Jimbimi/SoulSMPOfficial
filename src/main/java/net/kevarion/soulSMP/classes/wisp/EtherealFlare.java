@@ -1,15 +1,13 @@
-package net.kevarion.soulSMP.classes.jackolantern;
+package net.kevarion.soulSMP.classes.wisp;
 
 import net.kevarion.soulSMP.SoulSMP;
 import net.kevarion.soulSMP.manager.PlayerManager;
 import net.kevarion.soulSMP.manager.component.Ability;
 import net.kevarion.soulSMP.manager.component.SoulPlayer;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -17,12 +15,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
-
-public class JacksGrin extends Ability {
+public class EtherealFlare extends Ability {
     @Override
     public Component getName() {
-        return Component.text("Jack's Grin", NamedTextColor.GOLD, TextDecoration.UNDERLINED);
+        return Component.text("Ethereal Flare", TextColor.color(0x7ed3ed), TextDecoration.UNDERLINED);
     }
 
     @Override
@@ -32,7 +28,7 @@ public class JacksGrin extends Ability {
 
     @Override
     public int getCooldown() {
-        return 120;
+        return 120; // 2 minutes cooldown
     }
 
     @Override
@@ -43,11 +39,12 @@ public class JacksGrin extends Ability {
     @Override
     public void activate(Player player) {
         setActive(true);
-        Location center = player.getLocation().add(0, 1, 0);
+        Location location = player.getLocation();
 
-        new BukkitRunnable() {
+        // Shockwave effect and applying debuffs to enemies in range
+        BukkitRunnable abilityTask = new BukkitRunnable() {
             int ticks = 0;
-            final int maxTicks = 20;
+            final int maxTicks = 140;
 
             @Override
             public void run() {
@@ -59,24 +56,24 @@ public class JacksGrin extends Ability {
 
                 World world = player.getWorld();
 
-                world.spawnParticle(Particle.LARGE_SMOKE, center, 5, 0.5, 0.5, 0.5, 0);
-                world.spawnParticle(Particle.WITCH, center, 5, 0.5, 0.5, 0.5, 0);
-
-                SoulPlayer soulPlayer = PlayerManager.findSoulPlayer(player);
-                if (soulPlayer == null) return;
-
-                List<Entity> nearbyEntities = player.getNearbyEntities(8, 8, 8);
-                for (Entity entity : nearbyEntities) {
+                for (Entity entity : player.getWorld().getNearbyEntities(player.getLocation(), 7, 7, 7)) {
                     if (entity instanceof LivingEntity && entity != player) {
                         LivingEntity target = (LivingEntity) entity;
-                        if (soulPlayer.isTrusted(target)) continue;
 
-                        target.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 160, 0));
+                        // Apply the disorienting effects
+                        target.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 140, 0)); // 7 seconds (140 ticks)
+                        target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 140, 0)); // 7 seconds (140 ticks)
+                        target.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 140, 0)); // 7 seconds (140 ticks)
+
+                        // Play an explosive sound for impact
+                        target.getWorld().playSound(target.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1.0F, 1.0F);
                     }
                 }
 
-                ticks++;
+                ticks += 20;
             }
-        }.runTaskTimer(SoulSMP.getInstance(), 0, 5);
+        };
+
+        abilityTask.runTaskTimer(SoulSMP.getInstance(), 0, 1);
     }
 }
